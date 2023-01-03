@@ -55,7 +55,7 @@ public class RbnbpersoApplication {
 	}*/
 
 	//@Bean
-	CommandLineRunner start(AppUserRepository appUserRepository,
+	/*CommandLineRunner start(AppUserRepository appUserRepository,
 							AnnounceRepository announceRepository,
 							AvisRepository avisRepository,
 							ReservationRepository reservationRepository,
@@ -81,6 +81,6 @@ public class RbnbpersoApplication {
 				announceRepository.save(announce);
 			});
 		};
-	}
+	}*/
 
 }
