@@ -6,6 +6,7 @@ import com.bbb.rbnbperso.exceptions.AnnounceNotFoundException;
 import com.bbb.rbnbperso.exceptions.AvisNotFoundException;
 import com.bbb.rbnbperso.exceptions.ReservationNotFoundException;
 import com.bbb.rbnbperso.exceptions.UserNotFoundException;
+import com.bbb.rbnbperso.mappers.AppUserMapper;
 import com.bbb.rbnbperso.mappers.GestationMapperImp;
 import com.bbb.rbnbperso.repositories.*;
 import lombok.AllArgsConstructor;
@@ -27,13 +28,14 @@ public class GestationServiceImp implements GestationService {
     private ReservationRepository reservationRepository;
     private RoleRepository roleRepository;
     private GestationMapperImp dtoMappers;
+    private AppUserMapper appUserMapper;
 
     @Override
     public AppUserDTO saveUser(AppUserDTO appUserDTO) {
         log.info("Saving User");
-        AppUser appUser = dtoMappers.fromAppUserDTO(appUserDTO);
+        AppUser appUser = appUserMapper.toEntity(appUserDTO);
         AppUser savedUser = appUserRepository.save(appUser);
-        return dtoMappers.fromAppUser(savedUser);
+        return appUserMapper.toDto(savedUser);
     }
     @Override
     public AppUserDTO updateUser(AppUserDTO appUserDTO) {
