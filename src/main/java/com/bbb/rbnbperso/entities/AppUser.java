@@ -32,4 +32,6 @@ public class AppUser {
     private List<Reservation> reservationList = new ArrayList<>();
     @OneToMany(targetEntity = Avis.class, mappedBy = "appUser")
     private List<Avis> avisList = new ArrayList<>();
+
+    // test git conflict
 }
