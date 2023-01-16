@@ -11,6 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/avis")
 @AllArgsConstructor
+@CrossOrigin("*")
 public class AvisRestController {
 
     private GestationService gestationService;

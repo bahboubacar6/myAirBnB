@@ -57,7 +57,15 @@ public interface GestationService {
 
     void deleteAvis(Long idAvis);
 
-    AvisDTO getAvis(Long idAvis) throws AvisNotFoundException;
+    AvisDTO getAvis(Long idAvis) throws AvisNotFoundException ;
 
     List<AvisDTO> listAvis();
+
+
+    ReservationDTO addReservationToUser(ReservationFormDTO reservationFormDTO) throws Exception;
+
+
+    List<AnnounceDTO> announcesUser(Long idUser);
+
+    List<AppUserDTO> searchUsers(String kw);
 }

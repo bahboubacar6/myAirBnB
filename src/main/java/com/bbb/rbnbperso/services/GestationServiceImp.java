@@ -179,4 +179,68 @@ public class GestationServiceImp implements GestationService {
         List<AvisDTO> avisDTOSList = avisList.stream().map(avis -> dtoMappers.fromAvis(avis)).collect(Collectors.toList());
         return avisDTOSList;
     }
+
+
+   /* public ReservationDTO addReservationToUser(Long idUser, Long idAnnounce, LocalDateTime dateStart, LocalDateTime endDate) throws Exception {
+        AppUser optUser = appUserRepository.findById(idUser).orElseThrow(()->new Exception("Not found User"));
+        Announce optAnn = announceRepository.findById(idAnnounce).orElseThrow(()->new Exception("Not found Announce"));
+        Reservation reservation =new Reservation();
+        reservation.setAppUser(optUser);
+        reservation.setAnnounce(optAnn);
+        reservation.setStartDate(dateStart);
+        reservation.setStartDate(endDate);
+        reservation.setTypeReservation(optAnn.getTypeAnnounce());
+        reservation.setPrice(optAnn.getPrice());
+        reservation.setDescription(optAnn.getDescription());
+        Reservation savedRes = reservationRepository.save(reservation);
+        return dtoMappers.fromReservation(savedRes);
+    }*/
+
+
+
+   /* public ReservationDTO addReservationToUser(Long idUser, Long idAnnounce, LocalDateTime dateStart, LocalDateTime endDate) throws Exception {
+        AppUser optUser = appUserRepository.findById(idUser).orElseThrow(()->new Exception("Not found User"));
+        Announce optAnn = announceRepository.findById(idAnnounce).orElseThrow(()->new Exception("Not found Announce"));
+        Reservation reservation =new Reservation();
+        reservation.setAppUser(optUser);
+        reservation.setAnnounce(optAnn);
+        reservation.setStartDate(dateStart);
+        reservation.setStartDate(endDate);
+        reservation.setTypeReservation(optAnn.getTypeAnnounce());
+        reservation.setPrice(optAnn.getPrice());
+        reservation.setDescription(optAnn.getDescription());
+        Reservation savedRes = reservationRepository.save(reservation);
+        return dtoMappers.fromReservation(savedRes);
+    }*/
+
+    @Override
+    public ReservationDTO addReservationToUser(ReservationFormDTO reservationFormDTO) throws Exception {
+        AppUser optUser = appUserRepository.findById(reservationFormDTO.getIdAppUserDTO()).orElseThrow(()->new Exception("Not found User"));
+        Announce optAnn = announceRepository.findById(reservationFormDTO.getIdAnnounceDTO()).orElseThrow(()->new Exception("Not found Announce"));
+        Reservation reservation =new Reservation();
+        reservation.setAppUser(optUser);
+        reservation.setAnnounce(optAnn);
+        reservation.setDate(reservationFormDTO.getDate());
+        reservation.setStartDate(reservationFormDTO.getStartDate());
+        reservation.setEndDate(reservationFormDTO.getEndDate());
+        reservation.setTypeReservation(reservationFormDTO.getTypeReservation());
+        reservation.setPrice(reservationFormDTO.getPrice());
+        reservation.setImage(reservationFormDTO.getImage());
+        reservation.setDescription(reservationFormDTO.getDescription());
+        Reservation savedRes = reservationRepository.save(reservation);
+        return dtoMappers.fromReservation(savedRes);
+    }
+    @Override
+    public List<AnnounceDTO> announcesUser(Long idUser){
+        List<Announce> announcesUser = announceRepository.findByAppUserIdUser(idUser);
+        List<AnnounceDTO> announceDTOSUser = announcesUser.stream().map(annonce -> dtoMappers.fromAnnounce(annonce)).collect(Collectors.toList());
+        return announceDTOSUser;
+    }
+    @Override
+    public List<AppUserDTO> searchUsers(String kw){
+        //List<AppUser> nameContains = appUserRepository.searchUsers(kw);
+        List<AppUser> nameContains = appUserRepository.findByLastNameContains(kw);
+        List<AppUserDTO> appUserDTO = nameContains.stream().map(appUser -> dtoMappers.fromAppUser(appUser)).collect(Collectors.toList());
+        return appUserDTO;
+    }
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -18,10 +19,12 @@ public class Announce {
     private Long idAnnounce;
     @Enumerated(EnumType.STRING)
     private TypeAR typeAnnounce;
-    private LocalDateTime date;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate date;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String image;
+    private Double price;
+    private String description;
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
     private AppUser appUser;

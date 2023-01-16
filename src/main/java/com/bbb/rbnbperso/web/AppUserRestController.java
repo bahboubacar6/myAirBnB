@@ -11,6 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
+@CrossOrigin("*")
 public class AppUserRestController {
 
     private GestationService gestationService;
@@ -18,6 +19,11 @@ public class AppUserRestController {
     @GetMapping("/all")
     public List<AppUserDTO> users(){
         return gestationService.listUsers();
+    }
+    @GetMapping("/search")
+    public List<AppUserDTO> searchUser(@RequestParam(name = "keyword", defaultValue = "") String keyword){
+      // return gestationService.searchUsers("%" + keyword + "%");
+        return gestationService.searchUsers(keyword);
     }
     @GetMapping("/all/{id}")
     public AppUserDTO getUser(@PathVariable(name = "id") Long idUser) throws UserNotFoundException {
@@ -32,7 +38,7 @@ public class AppUserRestController {
         appUserDTO.setIdUser(idUser);
         return gestationService.updateUser(appUserDTO);
     }
-    @DeleteMapping("/all/{id}")
+    @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id){
         gestationService.deleteAppUser(id);
     }

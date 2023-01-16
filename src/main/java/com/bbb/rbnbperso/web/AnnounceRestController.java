@@ -1,11 +1,14 @@
 package com.bbb.rbnbperso.web;
 
 import com.bbb.rbnbperso.dtos.AnnounceDTO;
+import com.bbb.rbnbperso.dtos.AppUserDTO;
+import com.bbb.rbnbperso.dtos.ReservationDTO;
 import com.bbb.rbnbperso.exceptions.AnnounceNotFoundException;
 import com.bbb.rbnbperso.services.GestationService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -40,4 +43,9 @@ public class AnnounceRestController {
     public void deleteAnnounce(@PathVariable Long id){
         gestationService.deleteAnnounce(id);
     }
+    @GetMapping("/{idUser}/announce")
+    public List<AnnounceDTO> announcesUser(@PathVariable Long idUser){
+        return gestationService.announcesUser(idUser);
+    }
+
 }

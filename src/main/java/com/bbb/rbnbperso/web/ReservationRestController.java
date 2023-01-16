@@ -1,16 +1,21 @@
 package com.bbb.rbnbperso.web;
 
 import com.bbb.rbnbperso.dtos.ReservationDTO;
+import com.bbb.rbnbperso.dtos.ReservationFormDTO;
 import com.bbb.rbnbperso.exceptions.ReservationNotFoundException;
 import com.bbb.rbnbperso.services.GestationService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/reservations")
 @AllArgsConstructor
+@CrossOrigin("*")
 public class ReservationRestController {
 
     private GestationService gestationService;
@@ -28,6 +33,17 @@ public class ReservationRestController {
     @PostMapping("/all")
     public ReservationDTO saveReservation(@RequestBody ReservationDTO reservationDTO){
         return gestationService.saveReservation(reservationDTO);
+    }
+
+    @PostMapping("/all/add")
+    public ResponseEntity<ReservationDTO> addReservationToUser(@RequestBody ReservationFormDTO reservationFormDTO){
+
+        try {
+            ReservationDTO addResToUser = gestationService.addReservationToUser(reservationFormDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(addResToUser);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping("/all/{id}")

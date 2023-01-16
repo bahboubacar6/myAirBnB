@@ -11,6 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/role")
 @AllArgsConstructor
+@CrossOrigin("*")
 public class RoleRestController {
 
     private GestationService gestationService;

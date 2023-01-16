@@ -5,16 +5,18 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
-@Data
-public class AnnounceDTO {
 
-    private Long idAnnounce;
-    private TypeAR typeAnnounce;
+@Data
+public class ReservationFormDTO {
+
+    private Long idReservation;
+    private TypeAR typeReservation;
     private LocalDate date;
     private LocalDate startDate;
     private LocalDate endDate;
     private String image;
     private Double price;
     private String description;
-    private AppUserDTO appUserDTO;
+    private Long idAppUserDTO;
+    private Long idAnnounceDTO;
 }
