@@ -11,6 +11,7 @@ public class GestationMapperImp {
     public AppUserDTO fromAppUser(AppUser appUser){
         AppUserDTO appUserDTO = new AppUserDTO();
         BeanUtils.copyProperties(appUser, appUserDTO);
+
         return appUserDTO;
     }
 
@@ -20,19 +21,19 @@ public class GestationMapperImp {
         return appUser;
     }
 
-    public AnnounceDTO fromAnnounce(Announce announce){
+   /* public AnnounceDTO fromAnnounce(Announce announce){
         AnnounceDTO announceDTO = new AnnounceDTO();
         BeanUtils.copyProperties(announce, announceDTO);
         announceDTO.setAppUserDTO(fromAppUser(announce.getAppUser()));
         return announceDTO;
-    }
+    }*/
 
-    public Announce fromAnnounceDTO(AnnounceDTO announceDTO){
+ /*   public Announce fromAnnounceDTO(AnnounceDTO announceDTO){
         Announce announce = new Announce();
         BeanUtils.copyProperties(announceDTO, announce);
         announce.setAppUser(fromAppUserDTO(announceDTO.getAppUserDTO()));
         return announce;
-    }
+    }*/
 
     public RoleDTO fromRole(Role role){
         RoleDTO roleDTO = new RoleDTO();
@@ -50,7 +51,7 @@ public class GestationMapperImp {
         ReservationDTO reservationDTO = new ReservationDTO();
         BeanUtils.copyProperties(reservation, reservationDTO);
         reservationDTO.setAppUserDTO(fromAppUser(reservation.getAppUser()));
-        reservationDTO.setAnnounceDTO(fromAnnounce(reservation.getAnnounce()));
+     //  reservationDTO.setAnnounceDTO(fromAnnounce(reservation.getAnnounce()));
         return reservationDTO;
     }
 
@@ -58,7 +59,7 @@ public class GestationMapperImp {
         Reservation reservation = new Reservation();
         BeanUtils.copyProperties(reservationDTO, reservation);
         reservation.setAppUser(fromAppUserDTO(reservationDTO.getAppUserDTO()));
-        reservation.setAnnounce(fromAnnounceDTO(reservationDTO.getAnnounceDTO()));
+      //  reservation.setAnnounce(fromAnnounceDTO(reservationDTO.getAnnounceDTO()));
         return reservation;
     }
 

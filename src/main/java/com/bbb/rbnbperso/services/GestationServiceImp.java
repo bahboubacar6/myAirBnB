@@ -2,19 +2,27 @@ package com.bbb.rbnbperso.services;
 
 import com.bbb.rbnbperso.dtos.*;
 import com.bbb.rbnbperso.entities.*;
+import com.bbb.rbnbperso.enums.TypeAR;
 import com.bbb.rbnbperso.exceptions.AnnounceNotFoundException;
 import com.bbb.rbnbperso.exceptions.AvisNotFoundException;
 import com.bbb.rbnbperso.exceptions.ReservationNotFoundException;
 import com.bbb.rbnbperso.exceptions.UserNotFoundException;
+import com.bbb.rbnbperso.mappers.AnnounceMapper;
 import com.bbb.rbnbperso.mappers.AppUserMapper;
 import com.bbb.rbnbperso.mappers.GestationMapperImp;
+import com.bbb.rbnbperso.mappers.ImageModelMapper;
 import com.bbb.rbnbperso.repositories.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.relation.RoleNotFoundException;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +37,9 @@ public class GestationServiceImp implements GestationService {
     private RoleRepository roleRepository;
     private GestationMapperImp dtoMappers;
     private AppUserMapper appUserMapper;
+    private AnnounceMapper announceMapper;
+    private ImageModelRepository imageModelRepository;
+    private ImageModelMapper imageModelMapper;
 
     @Override
     public AppUserDTO saveUser(AppUserDTO appUserDTO) {
@@ -62,16 +73,31 @@ public class GestationServiceImp implements GestationService {
     }
     @Override
     public AnnounceDTO saveAnnounce(AnnounceDTO announceDTO){
-        Announce announce = dtoMappers.fromAnnounceDTO(announceDTO);
+        Announce announce = announceMapper.toEntity(announceDTO);
         Announce savedAnnounce = announceRepository.save(announce);
-        AnnounceDTO savedAnnounceDTO = dtoMappers.fromAnnounce(savedAnnounce);
+        AnnounceDTO savedAnnounceDTO = announceMapper.toDto(savedAnnounce);
         return savedAnnounceDTO;
     }
+
+    @Override
+    public AnnounceDTO saveAnnounceDB(AnnounceDTO announceDTO) throws IOException {
+        Announce announce = announceMapper.toEntity(announceDTO);
+        AppUser appUser = appUserRepository.findById(announceDTO.getIdUser()).orElseThrow(() -> new UsernameNotFoundException("USER NOT FOUND"));
+        announce.setAppUser(appUser);
+        Set<ImageModel> imageModels = imageModelMapper.toEntityList(announceDTO.getAnnounceImages());
+        List<ImageModel> imageModelslist = imageModelRepository.saveAll(imageModels);
+        Set<ImageModel> imageModelSet = new HashSet<>(imageModelslist);
+        announce.setAnnounceImages(imageModelSet);
+        Announce savedAnnounce = announceRepository.save(announce);
+        AnnounceDTO savedAnnounceDTO = announceMapper.toDto(savedAnnounce);
+        return savedAnnounceDTO;
+    }
+
     @Override
     public AnnounceDTO updateAnnounce(AnnounceDTO announceDTO){
-        Announce announce = dtoMappers.fromAnnounceDTO(announceDTO);
+        Announce announce = announceMapper.toEntity(announceDTO);
         Announce savedAnnounce = announceRepository.save(announce);
-        AnnounceDTO savedAnnounceDTO = dtoMappers.fromAnnounce(savedAnnounce);
+        AnnounceDTO savedAnnounceDTO = announceMapper.toDto(savedAnnounce);
         return savedAnnounceDTO;
     }
     @Override
@@ -81,12 +107,12 @@ public class GestationServiceImp implements GestationService {
     @Override
     public AnnounceDTO getAnnounce(Long idAnnounce) throws AnnounceNotFoundException {
         Announce announce = announceRepository.findById(idAnnounce).orElseThrow(()->new AnnounceNotFoundException("Announce Not Found"));
-        return dtoMappers.fromAnnounce(announce);
+        return announceMapper.toDto(announce);
     }
     @Override
     public List<AnnounceDTO> listAnnounces() {
         List<Announce> announceList = announceRepository.findAll();
-        List<AnnounceDTO> announceDTOList = announceList.stream().map(announce -> dtoMappers.fromAnnounce(announce)).collect(Collectors.toList());
+        List<AnnounceDTO> announceDTOList = announceList.stream().map(announce -> announceMapper.toDto(announce)).collect(Collectors.toList());
         return announceDTOList;
     }
     @Override
@@ -233,7 +259,7 @@ public class GestationServiceImp implements GestationService {
     @Override
     public List<AnnounceDTO> announcesUser(Long idUser){
         List<Announce> announcesUser = announceRepository.findByAppUserIdUser(idUser);
-        List<AnnounceDTO> announceDTOSUser = announcesUser.stream().map(annonce -> dtoMappers.fromAnnounce(annonce)).collect(Collectors.toList());
+        List<AnnounceDTO> announceDTOSUser = announcesUser.stream().map(annonce -> announceMapper.toDto(annonce)).collect(Collectors.toList());
         return announceDTOSUser;
     }
     @Override
@@ -242,5 +268,19 @@ public class GestationServiceImp implements GestationService {
         List<AppUser> nameContains = appUserRepository.findByLastNameContains(kw);
         List<AppUserDTO> appUserDTO = nameContains.stream().map(appUser -> dtoMappers.fromAppUser(appUser)).collect(Collectors.toList());
         return appUserDTO;
+    }
+    @Override
+    public List<AnnounceDTO> searchAnnounces(TypeAR kw){
+        //List<Announce> announceContains = announceRepository.findByTypeAnnounceContains(kw);
+        List<Announce> announceContains = announceRepository.searchAnnounces(kw);
+        List<AnnounceDTO> announceDTOS = announceContains.stream().map(announce -> announceMapper.toDto(announce)).collect(Collectors.toList());
+        return announceDTOS;
+    }
+
+    @Override
+    public byte[] getImageOfAnnonce(long idImage) {
+        return imageModelRepository.findById(idImage).orElseThrow(
+                ()-> new RuntimeException("image not found ")
+        ).getPicByte();
     }
 }

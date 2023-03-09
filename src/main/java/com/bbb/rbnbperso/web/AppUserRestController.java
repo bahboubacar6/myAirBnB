@@ -2,6 +2,7 @@ package com.bbb.rbnbperso.web;
 
 import com.bbb.rbnbperso.dtos.AppUserDTO;
 import com.bbb.rbnbperso.exceptions.UserNotFoundException;
+import com.bbb.rbnbperso.security.service.AccountService;
 import com.bbb.rbnbperso.services.GestationService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -9,12 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/v1/users")
 @AllArgsConstructor
 @CrossOrigin("*")
 public class AppUserRestController {
 
     private GestationService gestationService;
+    private AccountService accountService;
 
     @GetMapping("/all")
     public List<AppUserDTO> users(){
@@ -22,7 +24,7 @@ public class AppUserRestController {
     }
     @GetMapping("/search")
     public List<AppUserDTO> searchUser(@RequestParam(name = "keyword", defaultValue = "") String keyword){
-      // return gestationService.searchUsers("%" + keyword + "%");
+        //return gestationService.searchUsers("%" + keyword + "%");
         return gestationService.searchUsers(keyword);
     }
     @GetMapping("/all/{id}")
@@ -34,9 +36,9 @@ public class AppUserRestController {
         return gestationService.saveUser(appUserDTO);
     }
     @PutMapping("/all/{idUser}")
-    public AppUserDTO updateUser(@PathVariable Long idUser, @RequestBody AppUserDTO appUserDTO){
+    public AppUserDTO updateUser(@PathVariable Long idUser, @RequestBody AppUserDTO appUserDTO) throws UserNotFoundException {
         appUserDTO.setIdUser(idUser);
-        return gestationService.updateUser(appUserDTO);
+        return accountService.updateUser(appUserDTO);
     }
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id){

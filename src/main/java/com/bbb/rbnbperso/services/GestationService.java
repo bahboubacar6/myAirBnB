@@ -9,8 +9,10 @@ import com.bbb.rbnbperso.exceptions.AnnounceNotFoundException;
 import com.bbb.rbnbperso.exceptions.AvisNotFoundException;
 import com.bbb.rbnbperso.exceptions.ReservationNotFoundException;
 import com.bbb.rbnbperso.exceptions.UserNotFoundException;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.relation.RoleNotFoundException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,6 +27,8 @@ public interface GestationService {
     AppUserDTO getUser(Long idUser) throws UserNotFoundException;
     List<AnnounceDTO> listAnnounces();
     AnnounceDTO saveAnnounce(AnnounceDTO announceDTO);
+
+    AnnounceDTO saveAnnounceDB(AnnounceDTO announceDTO) throws IOException;
 
     AnnounceDTO updateAnnounce(AnnounceDTO announceDTO);
 
@@ -68,4 +72,8 @@ public interface GestationService {
     List<AnnounceDTO> announcesUser(Long idUser);
 
     List<AppUserDTO> searchUsers(String kw);
+
+    List<AnnounceDTO> searchAnnounces(TypeAR kw);
+
+    byte [] getImageOfAnnonce(long idImage);
 }

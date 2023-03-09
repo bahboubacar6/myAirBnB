@@ -6,9 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     List<AppUser> findByLastNameContains(String keyword);
     @Query("Select u from AppUser u where u.lastName like:kw")
     List<AppUser> searchUsers(@Param("kw") String keyword);
+    AppUser findByUsername(String username);
+    Optional<AppUser> findByEmail(String email);
 }

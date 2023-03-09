@@ -1,16 +1,15 @@
 package com.bbb.rbnbperso.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Entity
-@Data @NoArgsConstructor @AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,20 +17,44 @@ public class AppUser {
     private Long idUser;
     private String lastName;
     private String firstName;
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
     @Column(unique = true)
     private String username;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "password", nullable = false)
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "AppUser_Role",
-                joinColumns = @JoinColumn(name = "id_user"),
-                inverseJoinColumns = @JoinColumn(name = "id_role"))
-    private Collection<Role> roleList = new ArrayList<>();
+   /* @JoinTable(name = "app_user_list_roles",
+            joinColumns = {@JoinColumn(name = "id_user")},
+            inverseJoinColumns = {@JoinColumn(name = "id_role")}
+    )*/
+    private List<Role> listRoles = new ArrayList<>();
+    //private Set<Role> listRoles = new HashSet<>();
     @OneToMany(targetEntity = Announce.class, mappedBy = "appUser")
+    //@JsonManagedReference
     private List<Announce> announceList = new ArrayList<>();
     @OneToMany(targetEntity = Reservation.class, mappedBy = "appUser")
+    //@JsonManagedReference
     private List<Reservation> reservationList = new ArrayList<>();
     @OneToMany(targetEntity = Avis.class, mappedBy = "appUser")
+    //@JsonManagedReference
     private List<Avis> avisList = new ArrayList<>();
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AppUser appUser = (AppUser) o;
+        return Objects.equals(idUser, appUser.idUser) && Objects.equals(lastName, appUser.lastName) && Objects.equals(firstName, appUser.firstName) && Objects.equals(email, appUser.email) && Objects.equals(username, appUser.username) && Objects.equals(password, appUser.password) && Objects.equals(listRoles, appUser.listRoles) && Objects.equals(announceList, appUser.announceList) && Objects.equals(reservationList, appUser.reservationList) && Objects.equals(avisList, appUser.avisList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idUser, lastName, firstName, email, username, password, listRoles, announceList, reservationList, avisList);
+    }
+
+    public void ifPresent(Object o) {
+    }
 }

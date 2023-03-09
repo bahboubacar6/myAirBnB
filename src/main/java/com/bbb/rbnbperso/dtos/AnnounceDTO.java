@@ -4,6 +4,7 @@ import com.bbb.rbnbperso.enums.TypeAR;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 public class AnnounceDTO {
@@ -16,5 +17,6 @@ public class AnnounceDTO {
     private String image;
     private Double price;
     private String description;
-    private AppUserDTO appUserDTO;
+    private Set<ImageModelDTO> announceImages;
+    private Long idUser;
 }

@@ -1,7 +1,7 @@
 spring:
   datasource:
     username: root
-    url: jdbc:mysql://localhost:3306/airbnbDB?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/rbnb?serverTimezone=UTC
     password:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect

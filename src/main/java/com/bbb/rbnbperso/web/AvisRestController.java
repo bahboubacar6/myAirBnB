@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/avis")
+@RequestMapping("/v1/avis")
 @AllArgsConstructor
 @CrossOrigin("*")
 public class AvisRestController {

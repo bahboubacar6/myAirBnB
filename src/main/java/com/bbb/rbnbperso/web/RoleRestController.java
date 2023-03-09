@@ -9,7 +9,7 @@ import javax.management.relation.RoleNotFoundException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/v1/role")
 @AllArgsConstructor
 @CrossOrigin("*")
 public class RoleRestController {
